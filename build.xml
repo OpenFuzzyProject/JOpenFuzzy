@@ -1,0 +1,43 @@
+<project name="openfuzzy" default="all" basedir=".">
+	<property name="src.dir" value="src" />
+	<property name="classes.dir" value="build/classes" />
+	<property name="javadoc.dir" value="doc" />
+	<property name="jar.name" value="jopenfuzzy.jar" />
+	<property name="jar.src.name" value="jopenfuzzy-src.jar" />
+
+	<target name="all">
+		<antcall target="jar">
+		</antcall>
+		<antcall target="jar-src">
+		</antcall>
+		<antcall target="compile">
+		</antcall>
+		<antcall target="javadoc">
+		</antcall>
+	</target>
+
+	<target name="jar" depends="compile">
+		<jar jarfile="${jar.name}" basedir="${classes.dir}">
+		</jar>
+	</target>
+
+	<target name="jar-src" depends="compile">
+		
+		<jar jarfile="${jar.src.name}">
+			<fileset dir="${classes.dir}" />
+			<fileset dir="${src.dir}/api" />
+			<fileset dir="${src.dir}/impl" />
+		</jar>
+	</target>
+
+	<target name="compile">
+		<mkdir dir="${classes.dir}" />
+		<javac srcdir="${src.dir}" destdir="${classes.dir}" />
+	</target>
+
+	<target name="javadoc">
+		<javadoc destdir="${javadoc.dir}">
+			<fileset dir="${src.dir}" />
+		</javadoc>
+	</target>
+</project>
