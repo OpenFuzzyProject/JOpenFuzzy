@@ -19,15 +19,14 @@
 	<target name="clean">
 		<delete file="${jar.name}" />
 		<delete file="${jar.src.name}" />
-		<delete dir="${classes.dir}"/>
-		<delete dir="build"/>
-		<delete dir="${javadoc.dir}"/>
+		<delete dir="${classes.dir}" />
+		<delete dir="build" />
+		<delete dir="${javadoc.dir}" />
 	</target>
-	
+
 	<target name="jar" depends="compile">
 		<delete file="${jar.name}" />
-		<jar jarfile="${jar.name}" basedir="${classes.dir}">
-		</jar>
+		<jar jarfile="${jar.name}" basedir="${classes.dir}" />
 	</target>
 
 	<target name="jar-with-src" depends="compile">
@@ -40,16 +39,16 @@
 	</target>
 
 	<target name="compile">
-		<delete dir="${classes.dir}"/>
+		<delete dir="${classes.dir}" />
 		<mkdir dir="${classes.dir}" />
-		<javac srcdir="${src.dir}" destdir="${classes.dir}" />
+		<javac srcdir="${src.dir}" destdir="${classes.dir}" includeantruntime="false" />
 	</target>
 
 	<target name="javadoc">
-		<delete dir="${javadoc.dir}"/>
+		<delete dir="${javadoc.dir}" />
 		<javadoc destdir="${javadoc.dir}">
 			<fileset dir="${src.dir}" />
 		</javadoc>
 	</target>
-	
+
 </project>
