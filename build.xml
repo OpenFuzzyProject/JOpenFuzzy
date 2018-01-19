@@ -17,12 +17,13 @@
 	</target>
 
 	<target name="jar" depends="compile">
+		<delete file="${jar.name}" />
 		<jar jarfile="${jar.name}" basedir="${classes.dir}">
 		</jar>
 	</target>
 
 	<target name="jar-src" depends="compile">
-		
+		<delete file="${jar.src.name}" />
 		<jar jarfile="${jar.src.name}">
 			<fileset dir="${classes.dir}" />
 			<fileset dir="${src.dir}/api" />
@@ -31,11 +32,13 @@
 	</target>
 
 	<target name="compile">
+		<delete dir="${classes.dir}"/>
 		<mkdir dir="${classes.dir}" />
 		<javac srcdir="${src.dir}" destdir="${classes.dir}" />
 	</target>
 
 	<target name="javadoc">
+		<delete dir="${javadoc.dir}"/>
 		<javadoc destdir="${javadoc.dir}">
 			<fileset dir="${src.dir}" />
 		</javadoc>
