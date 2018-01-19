@@ -16,13 +16,21 @@
 		</antcall>
 	</target>
 
+	<target name="clean">
+		<delete file="${jar.name}" />
+		<delete file="${jar.src.name}" />
+		<delete dir="${classes.dir}"/>
+		<delete dir="build"/>
+		<delete dir="${javadoc.dir}"/>
+	</target>
+	
 	<target name="jar" depends="compile">
 		<delete file="${jar.name}" />
 		<jar jarfile="${jar.name}" basedir="${classes.dir}">
 		</jar>
 	</target>
 
-	<target name="jar-src" depends="compile">
+	<target name="jar-with-src" depends="compile">
 		<delete file="${jar.src.name}" />
 		<jar jarfile="${jar.src.name}">
 			<fileset dir="${classes.dir}" />
@@ -43,4 +51,5 @@
 			<fileset dir="${src.dir}" />
 		</javadoc>
 	</target>
+	
 </project>
