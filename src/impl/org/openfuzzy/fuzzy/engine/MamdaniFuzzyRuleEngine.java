@@ -21,13 +21,18 @@ class MamdaniFuzzyRuleEngine {
 	private IFuzzySet thenSet;
 
 	protected MamdaniFuzzyRuleEngine(IFuzzyRule rule, IKnowledgeBase kb) {
-		ifSets = rule.getAntecedent().getFuzzySetNames().stream().map(kb::getFuzzySet).map(Optional::get)
+		ifSets = rule.getAntecedent().getFuzzySetNames().stream()
+				.map(kb::getFuzzySet)
+				.map(Optional::get)
 				.collect(Collectors.toList());
 		thenSet = kb.getFuzzySet(rule.getConsequent().getThenPartFuzzySetName()).get();
 	}
 
 	protected Optional<IFuzzySet> eval(Map<String, Double> input) {
-		FuzzyLogic fit = ifSets.stream().map(set -> set.mv(input)).reduce((a, b) -> a.and(b)).get();
+		// calculate goodness-of-fit at if-part  
+		FuzzyLogic fit = ifSets.stream()
+				.map(set -> set.mv(input))
+				.reduce((a, b) -> a.and(b)).get();
 
 		if (fit == FuzzyLogic.FALSE)
 			return Optional.empty();

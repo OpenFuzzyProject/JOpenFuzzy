@@ -15,7 +15,8 @@ public class FuzzyInferenceEngine implements IFuzzyInferenceEngine {
 
 	public FuzzyInferenceEngine(IFuzzyInferenceSystem fis) {
 		this.fis = fis;
-		ruleEngines = fis.getRB().getRules().stream().map(rule -> new MamdaniFuzzyRuleEngine(rule, fis.getKB()))
+		ruleEngines = fis.getRB().getRules().stream()
+				.map(rule -> new MamdaniFuzzyRuleEngine(rule, fis.getKB()))
 				.collect(Collectors.toList());
 	}
 
@@ -27,8 +28,11 @@ public class FuzzyInferenceEngine implements IFuzzyInferenceEngine {
 	@Override
 	public Map<String, Double> eval(Map<String, Double> input) {
 		// get each rule results
-		List<IFuzzySet> outputs = ruleEngines.stream().map(eng -> eng.eval(input)).filter(Optional::isPresent)
-				.map(Optional::get).collect(Collectors.toList());
+		List<IFuzzySet> outputs = ruleEngines.stream()
+				.map(eng -> eng.eval(input))
+				.filter(Optional::isPresent)
+				.map(Optional::get)
+				.collect(Collectors.toList());
 		
 		if (outputs.size() == 0)
 			return new HashMap<>();
