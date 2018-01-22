@@ -123,47 +123,58 @@ public class FuzzySetFactory {
 
 			@Override
 			public IMembershipFunction getMembershipFunction() {
-				// それぞれの点xのユークリッド距離の最短距離をとる点y(!=x)を求める
+				// For each point x in sample points, 
+				// find point y that the distance of x and is minimum in sample points that exclude x.
 				Map<double[], double[]> minDistanceLinks = samplePoints.parallelStream()
-						.collect(Collectors.toMap(x -> x, x -> samplePoints.stream().filter(y -> x != y)
+						.collect(Collectors.toMap(
+								x -> x, 
+								x -> samplePoints.stream()
+								.filter(y -> x != y)
 								.sorted((a, b) -> Double.compare(euclideanDistance(x, a), euclideanDistance(x, b)))
 								.findFirst().get()));
 
-				// それぞれの点xのユークリッド距離の最短距離min(d)の平均に定数Kmをかけた近傍閾値epsilon_mを求める
+				// Calculate neighbourhood threshold value epsilon_m 
+				// that is the product of Km and the average of the distance of x and y that is closest to x. 
 				double epsilon_m = minDistanceLinks.entrySet().parallelStream()
-						.map(link -> euclideanDistance(link.getKey(), link.getValue())).mapToDouble(Double::doubleValue)
+						.map(link -> euclideanDistance(link.getKey(), link.getValue()))
+						.mapToDouble(Double::doubleValue)
 						.average().getAsDouble() * km;
 
-				// ユークリッド距離がepsilon_m以下の組を結合して近郷グラフを構成する
+				// Find the pair of x and y in sample points that the distance of is below epsilon_m.
 				Map<double[], List<double[]>> links = samplePoints.parallelStream()
-						.collect(Collectors.toMap(x -> x, x -> samplePoints.stream()
-								.filter(y -> euclideanDistance(x, y) <= epsilon_m).collect(Collectors.toList())));
+						.collect(Collectors
+								.toMap(x -> x,
+										x -> samplePoints.stream()
+										.filter(y -> euclideanDistance(x, y) <= epsilon_m)
+										.collect(Collectors.toList())));
 
-				// それぞれの点xのネットワーク距離の最短距離min(d)の平均に定数Kfをかけた近傍閾値epsilon_fを求める
+				// Calculate neighbourhood threshold value epsilon_m 
+				// that is the product of Kf and the average of the network distance of x and y that is closest to x. 
 				double epsilon_f = minDistanceLinks.entrySet().parallelStream()
 						.filter(x -> links.get(x.getKey()).size() > 0)
 						.map(link -> euclideanDistance(link.getKey(), link.getValue())).mapToDouble(Double::doubleValue)
-						.average().getAsDouble() * km;
+						.average().getAsDouble() * kf;
 
-				// epsilon_f以下のネットワーク距離のものを集める。
+				// For each point x in sample points,
+				// collect the points that the distance of x and is below epsilon_f.
 				Map<double[], List<double[]>> distanceBelowEpsilonFPoints = samplePoints.stream()
 						.collect(Collectors.toMap(x -> x, x -> samplePoints.stream()
 								.filter(y -> networkDistance(x, y, links) <= epsilon_f).collect(Collectors.toList())));
 
-				// epsilon_f以下のネットワーク距離のものを集めた中で最も多いものを集める。
+				// Find the maximum in the numbers of collecting points of each x in sample points.
 				double nMax = distanceBelowEpsilonFPoints.values().stream().mapToDouble(x -> Double.valueOf(x.size()))
 						.max().getAsDouble() + 1;
 
 				return input -> {
-					// 入力をdomainNames順に並べる
+					// Sort input by domain names.
 					double[] p = paramNames.stream().mapToDouble(name -> input.get(name)).toArray();
-					// サンプル点に同じ点があるか探す。
+					// Find same points with input.
 					Optional<double[]> same_p = links.keySet().stream().filter(x -> Arrays.equals(x, p)).findFirst();
 
 					if (same_p.isPresent()) {
 						return FuzzyLogic.get((double) distanceBelowEpsilonFPoints.get(same_p.get()).size() + 1 / nMax);
 					} else {
-						// 簡易でネットワークを構築
+						// Create simple network.
 						List<double[]> pLink = samplePoints.stream().filter(x -> x != p)
 								.filter(x -> euclideanDistance(p, x) <= epsilon_m).collect(Collectors.toList());
 						links.put(p, pLink);
