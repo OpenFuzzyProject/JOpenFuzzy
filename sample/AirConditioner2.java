@@ -43,13 +43,13 @@ public class AirConditioner2 {
 				Arrays.asList(new String[] { "temperature", "humidity" }), uncomfortableSample, 1.0, 1.0);
 
 		// Fuzzy sets for output
-		IFuzzySet strong = FuzzySetFactory.createRightUpLinearShapeFuzzySet("強い", "volume", 6, 10);
-		IFuzzySet week = FuzzySetFactory.createLeftUpLinearShapeFuzzySet("弱い", "volume", 0, 4);
+		IFuzzySet strong = FuzzySetFactory.createRightUpLinearShapeFuzzySet("strong", "volume", 6, 10);
+		IFuzzySet week = FuzzySetFactory.createLeftUpLinearShapeFuzzySet("week", "volume", 0, 4);
 
 		IKnowledgeBase kb = new KnowledgeBase(domain, comfortable, uncomfortable, strong, week);
 
-		IFuzzyRule rule1 = new FuzzyRule(new Antecedent("comfortable"), new Consequent("弱い"));
-		IFuzzyRule rule2 = new FuzzyRule(new Antecedent("uncomfortable"), new Consequent("強い"));
+		IFuzzyRule rule1 = new FuzzyRule(new Antecedent("comfortable"), new Consequent("week"));
+		IFuzzyRule rule2 = new FuzzyRule(new Antecedent("uncomfortable"), new Consequent("strong"));
 
 		IRuleBase rb = new MamdaniRuleBase(Defuzzifiers.DefuzzyByCOG(domain, 100), rule1, rule2);
 
