@@ -99,11 +99,16 @@ public class FuzzySetFactory {
 	 * 
 	 * @param name fuzzy set name
 	 * @param paramNames
-	 *            parameter names that arranged in the order of parameters of sample point
+	 *            parameter names that arranged in the order of parameters of sample
+	 *            point
 	 * @param samplePoints
 	 *            sample points
-	 * @param km Connect the pairs of nodes that km times the average of euclidean distances of any pairs of nodes.
-	 * @param kf When calculate membership value a node, consider other nodes that kf times the average of network distances of any pairs of nodes.
+	 * @param km
+	 *            Connect the pairs of nodes that km times the average of euclidean
+	 *            distances of any pairs of nodes.
+	 * @param kf
+	 *            When calculate membership value a node, consider other nodes that
+	 *            kf times the average of network distances of any pairs of nodes.
 	 * @return fuzzy set
 	 */
 	public static IFuzzySet createFuzzySetBySample(String name, List<String> paramNames, List<double[]> samplePoints,
@@ -123,64 +128,75 @@ public class FuzzySetFactory {
 
 			@Override
 			public IMembershipFunction getMembershipFunction() {
-				// For each point x in sample points, 
-				// find point y that the distance of x and is minimum in sample points that exclude x.
+				// For each point x in sample points,
+				// find point y that the distance of x and is minimum in sample points that
+				// exclude x.
 				Map<double[], double[]> minDistanceLinks = samplePoints.parallelStream()
-						.collect(Collectors.toMap(
-								x -> x, 
-								x -> samplePoints.stream()
+						.collect(Collectors.toMap(x -> x, x -> samplePoints.stream()
 								.filter(y -> x != y)
 								.sorted((a, b) -> Double.compare(euclideanDistance(x, a), euclideanDistance(x, b)))
 								.findFirst().get()));
 
-				// Calculate neighbourhood threshold value epsilon_m 
-				// that is the product of Km and the average of the distance of x and y that is closest to x. 
+				// Calculate neighbourhood threshold value epsilon_m
+				// that is the product of Km and the average of the distance of x and y that is
+				// closest to x.
 				double epsilon_m = minDistanceLinks.entrySet().parallelStream()
 						.map(link -> euclideanDistance(link.getKey(), link.getValue()))
 						.mapToDouble(Double::doubleValue)
 						.average().getAsDouble() * km;
 
-				// Find the pair of x and y in sample points that the distance of is below epsilon_m.
+				// Find the pair of x and y in sample points that the distance of is below
+				// epsilon_m.
 				Map<double[], List<double[]>> links = samplePoints.parallelStream()
-						.collect(Collectors
-								.toMap(x -> x,
-										x -> samplePoints.stream()
-										.filter(y -> euclideanDistance(x, y) <= epsilon_m)
-										.collect(Collectors.toList())));
+						.collect(Collectors.toMap(x -> x, x -> samplePoints.stream()
+								.filter(y -> euclideanDistance(x, y) <= epsilon_m)
+								.collect(Collectors.toList())));
 
-				// Calculate neighbourhood threshold value epsilon_m 
-				// that is the product of Kf and the average of the network distance of x and y that is closest to x. 
+				// Calculate neighbourhood threshold value epsilon_m
+				// that is the product of Kf and the average of the network distance of x and y
+				// that is closest to x.
 				double epsilon_f = minDistanceLinks.entrySet().parallelStream()
 						.filter(x -> links.get(x.getKey()).size() > 0)
-						.map(link -> euclideanDistance(link.getKey(), link.getValue())).mapToDouble(Double::doubleValue)
+						.map(link -> euclideanDistance(link.getKey(), link.getValue()))
+						.mapToDouble(Double::doubleValue)
 						.average().getAsDouble() * kf;
 
 				// For each point x in sample points,
 				// collect the points that the distance of x and is below epsilon_f.
 				Map<double[], List<double[]>> distanceBelowEpsilonFPoints = samplePoints.stream()
 						.collect(Collectors.toMap(x -> x, x -> samplePoints.stream()
-								.filter(y -> networkDistance(x, y, links) <= epsilon_f).collect(Collectors.toList())));
+								.filter(y -> networkDistance(x, y, links) <= epsilon_f)
+								.collect(Collectors.toList())));
 
-				// Find the maximum in the numbers of collecting points of each x in sample points.
+				// Find the maximum in the numbers of collecting points of each x in sample
+				// points.
 				double nMax = distanceBelowEpsilonFPoints.values().stream().mapToDouble(x -> Double.valueOf(x.size()))
 						.max().getAsDouble() + 1;
 
 				return input -> {
 					// Sort input by domain names.
 					double[] p = paramNames.stream().mapToDouble(name -> input.get(name)).toArray();
-					// Find same points with input.
+					// Find same point in sample points with input.
 					Optional<double[]> same_p = links.keySet().stream().filter(x -> Arrays.equals(x, p)).findFirst();
 
 					if (same_p.isPresent()) {
-						return FuzzyLogic.get((double) distanceBelowEpsilonFPoints.get(same_p.get()).size() + 1 / nMax);
+						return FuzzyLogic.get(((double) distanceBelowEpsilonFPoints.get(same_p.get()).size() + 1) / nMax);
 					} else {
-						// Create simple network.
-						List<double[]> pLink = samplePoints.stream().filter(x -> x != p)
-								.filter(x -> euclideanDistance(p, x) <= epsilon_m).collect(Collectors.toList());
-						links.put(p, pLink);
-						double n = samplePoints.stream().filter(y -> networkDistance(p, y, links) <= epsilon_f).count();
-						links.remove(p, pLink);
-						return FuzzyLogic.get(Math.min(n + 1 / nMax, 1.0));
+						// collect K points from sample points. K is half the number of sample points. 
+						List<double[]> nearPoints = samplePoints.stream()
+								.sorted((x, y) -> Double.compare(euclideanDistance(x, p), euclideanDistance(y, p)))
+								.collect(Collectors.toList())
+								.subList(0, samplePoints.size() / 2);
+						
+						double weightedMVSum = nearPoints.stream()
+								.mapToDouble(x -> (1.0 / euclideanDistance(x, p)) * (((double) distanceBelowEpsilonFPoints.get(x).size() + 1) / nMax))
+								.sum();
+
+						double weighteSum = nearPoints.stream()
+								.mapToDouble(x -> (1.0 / euclideanDistance(x, p)))
+								.sum();
+
+						return FuzzyLogic.get(weightedMVSum / weighteSum);
 					}
 				};
 			}
