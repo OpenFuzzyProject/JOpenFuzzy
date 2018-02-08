@@ -13,12 +13,12 @@ import org.openfuzzy.fuzzy.lang.FuzzyLogic;
  */
 public class TriangularShapeFuzzySet extends FuzzySetImpl implements IFuzzySet {
 	private String name;
-	private List<String> axisNames;
+	private List<String> paramNames;
 	private double x1, x2, x3;
 
 	public TriangularShapeFuzzySet(String name, String axisName, double x1, double x2, double x3) {
 		this.name = name;
-		this.axisNames = Arrays.asList(new String[] {axisName});
+		this.paramNames = Arrays.asList(new String[] {axisName});
 		this.x1 = x1;
 		this.x2 = x2;
 		this.x3 = x3;
@@ -31,13 +31,13 @@ public class TriangularShapeFuzzySet extends FuzzySetImpl implements IFuzzySet {
 
 	@Override
 	public List<String> getParameterNames() {
-		return axisNames;
+		return paramNames;
 	}
 
 	@Override
 	public IMembershipFunction getMembershipFunction() {
 		return input -> {
-			double x = input.get(axisNames.get(0));
+			double x = input.get(paramNames.get(0));
 			if (x <= x1 || x3 <= x)
 				return FuzzyLogic.FALSE;
 			else if (x == x2)
