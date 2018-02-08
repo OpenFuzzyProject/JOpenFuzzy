@@ -82,8 +82,8 @@ public class FuzzySetFactory {
 		};
 	}
 
-	public static IFuzzySet createTriangleShapeFuzzySet(String name, String axisName, double x1, double x2, double x3) {
-		return new TriangleShapeFuzzySet(name, axisName, x1, x2, x3);
+	public static IFuzzySet createTriangularShapeFuzzySet(String name, String axisName, double x1, double x2, double x3) {
+		return new TriangularShapeFuzzySet(name, axisName, x1, x2, x3);
 	}
 
 	public static IFuzzySet createLeftUpLinearShapeFuzzySet(String name, String axisName, double x1, double x2) {

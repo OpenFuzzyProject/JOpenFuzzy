@@ -11,12 +11,12 @@ import org.openfuzzy.fuzzy.lang.FuzzyLogic;
  * @author Toru Ikeda
  *
  */
-public class TriangleShapeFuzzySet extends FuzzySetImpl implements IFuzzySet {
+public class TriangularShapeFuzzySet extends FuzzySetImpl implements IFuzzySet {
 	private String name;
 	private List<String> axisNames;
 	private double x1, x2, x3;
 
-	public TriangleShapeFuzzySet(String name, String axisName, double x1, double x2, double x3) {
+	public TriangularShapeFuzzySet(String name, String axisName, double x1, double x2, double x3) {
 		this.name = name;
 		this.axisNames = Arrays.asList(new String[] {axisName});
 		this.x1 = x1;
