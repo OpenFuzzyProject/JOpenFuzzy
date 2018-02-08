@@ -93,7 +93,19 @@ public class FuzzySetFactory {
 	public static IFuzzySet createRightUpLinearShapeFuzzySet(String name, String axisName, double x1, double x2) {
 		return new RightUpLinearShapeFuzzySet(name, axisName, x1, x2);
 	}
+	
+	public static IFuzzySet createTrapezoidalShapeFuzzySet(String name, String axisName, double x1, double x2, double x3, double x4) {
+		return new TrapezoidalShapeFuzzySet(name, axisName, x1, x2, x3, x4);
+	}
 
+	public static IFuzzySet createSingletonShapeFuzzySet(String name, String axisName, double x){
+		return new SingletonShapeFuzzySet(name, axisName, x);
+	}
+	
+	public static IFuzzySet createRectangularShapeFuzzySet(String name, String axisName, double x1, double x2){
+		return new RectangularShapeFuzzySet(name, axisName, x1, x2);
+	}
+	
 	/**
 	 * Create fuzzy set from sample points. For the number of sample points n, it costs O(n^3).
 	 * 
