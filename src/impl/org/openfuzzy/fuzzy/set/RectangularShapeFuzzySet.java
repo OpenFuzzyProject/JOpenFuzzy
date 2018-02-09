@@ -5,12 +5,12 @@ import java.util.List;
 
 import org.openfuzzy.fuzzy.lang.FuzzyLogic;
 
-public class RightUpLinearShapeFuzzySet extends FuzzySetImpl implements IFuzzySet {
+public class RectangularShapeFuzzySet extends FuzzySetImpl implements IFuzzySet {
 	private String name;
 	private List<String> paramNames;
 	private double x1, x2;
 
-	public RightUpLinearShapeFuzzySet(String name, String paramName, double x1, double x2) {
+	public RectangularShapeFuzzySet(String name, String paramName, double x1, double x2) {
 		this.name = name;
 		this.paramNames = Arrays.asList(new String[] { paramName });
 		this.x1 = x1;
@@ -31,23 +31,8 @@ public class RightUpLinearShapeFuzzySet extends FuzzySetImpl implements IFuzzySe
 	public IMembershipFunction getMembershipFunction() {
 		return input -> {
 			double x = input.get(paramNames.get(0));
-			if (x <= x1)
-				return FuzzyLogic.FALSE;
-			else if (x2 <= x)
-				return FuzzyLogic.TRUE;
-			else if (x1 < x || x < x2)
-				return FuzzyLogic.get((x - x1) / (x2 - x1));
-			else
-				throw new RuntimeException(input.toString() + " is illegal in FuzzySet : " + name);
+			return FuzzyLogic.get(x1 <= x && x <= x2);
 		};
-	}
-
-	public void setX1(double x1) {
-		this.x1 = x1;
-	}
-
-	public void setX2(double x2) {
-		this.x2 = x2;
 	}
 
 }

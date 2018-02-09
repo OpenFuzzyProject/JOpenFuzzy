@@ -1,8 +1,9 @@
 # JOpenFuzzy
 JOpenFuzzy is java frameworks for development of fuzzy inference systems.
+JOpenFuzzy is under development and is beta version.
 
 # Before You Start
-1. Install Open JDK or Oracle JDK
+1. Install Open JDK or Oracle JDK 8 or later
 2. Install Apache Ant
 
 # Clone Repository
