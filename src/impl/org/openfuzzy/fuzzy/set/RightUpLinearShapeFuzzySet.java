@@ -10,9 +10,9 @@ public class RightUpLinearShapeFuzzySet extends FuzzySetImpl implements IFuzzySe
 	private List<String> paramNames;
 	private double x1, x2;
 
-	public RightUpLinearShapeFuzzySet(String name, String axisName, double x1, double x2) {
+	public RightUpLinearShapeFuzzySet(String name, String paramName, double x1, double x2) {
 		this.name = name;
-		this.paramNames = Arrays.asList(new String[] { axisName });
+		this.paramNames = Arrays.asList(new String[] { paramName });
 		this.x1 = x1;
 		this.x2 = x2;
 	}
