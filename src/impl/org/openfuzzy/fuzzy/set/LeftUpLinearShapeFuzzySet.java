@@ -10,9 +10,9 @@ public class LeftUpLinearShapeFuzzySet extends FuzzySetImpl implements IFuzzySet
 	private List<String> axisNames;
 	private double x1, x2;
 
-	public LeftUpLinearShapeFuzzySet(String name, String axisName, double x1, double x2) {
+	public LeftUpLinearShapeFuzzySet(String name, String paramName, double x1, double x2) {
 		this.name = name;
-		this.axisNames = Arrays.asList(new String[] { axisName });
+		this.axisNames = Arrays.asList(new String[] { paramName });
 		this.x1 = x1;
 		this.x2 = x2;
 	}

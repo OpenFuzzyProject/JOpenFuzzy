@@ -10,9 +10,9 @@ public class TrapezoidalShapeFuzzySet extends FuzzySetImpl implements IFuzzySet 
 	private List<String> paramNames;
 	private double x1, x2, x3, x4;
 
-	public TrapezoidalShapeFuzzySet(String name, String axisName, double x1, double x2, double x3, double x4) {
+	public TrapezoidalShapeFuzzySet(String name, String paramName, double x1, double x2, double x3, double x4) {
 		this.name = name;
-		this.paramNames = Arrays.asList(new String[] { axisName });
+		this.paramNames = Arrays.asList(new String[] { paramName });
 		this.x1 = x1;
 		this.x2 = x2;
 		this.x3 = x3;

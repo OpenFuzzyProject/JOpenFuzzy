@@ -11,9 +11,9 @@ public class SingletonShapeFuzzySet extends FuzzySetImpl implements IFuzzySet {
 	private List<String> paramNames;
 	private double x1;
 
-	public SingletonShapeFuzzySet(String name, String axisName, double x) {
+	public SingletonShapeFuzzySet(String name, String paramName, double x) {
 		this.name = name;
-		this.paramNames = Arrays.asList(new String[] { axisName });
+		this.paramNames = Arrays.asList(new String[] { paramName });
 		this.x1 = x;
 	}
 
