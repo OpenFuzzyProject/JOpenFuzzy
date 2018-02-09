@@ -62,7 +62,7 @@ public class FuzzySetFactory {
 	 */
 	public static IFuzzySet createFuzzySet(String name, String paramName, IMembershipFunction mf) {
 		return new FuzzySetImpl() {
-			private List<String> axisNames = new ArrayList<>(Arrays.asList(new String[] { paramName }));
+			private List<String> paramNames = new ArrayList<>(Arrays.asList(new String[] { paramName }));
 
 			@Override
 			public String getName() {
@@ -76,24 +76,36 @@ public class FuzzySetFactory {
 
 			@Override
 			public List<String> getParameterNames() {
-				return axisNames;
+				return paramNames;
 			}
 
 		};
 	}
 
-	public static IFuzzySet createTriangleShapeFuzzySet(String name, String axisName, double x1, double x2, double x3) {
-		return new TriangleShapeFuzzySet(name, axisName, x1, x2, x3);
+	public static IFuzzySet createTriangularShapeFuzzySet(String name, String paramName, double x1, double x2, double x3) {
+		return new TriangularShapeFuzzySet(name, paramName, x1, x2, x3);
 	}
 
-	public static IFuzzySet createLeftUpLinearShapeFuzzySet(String name, String axisName, double x1, double x2) {
-		return new LeftUpLinearShapeFuzzySet(name, axisName, x1, x2);
+	public static IFuzzySet createLeftUpLinearShapeFuzzySet(String name, String paramName, double x1, double x2) {
+		return new LeftUpLinearShapeFuzzySet(name, paramName, x1, x2);
 	}
 
-	public static IFuzzySet createRightUpLinearShapeFuzzySet(String name, String axisName, double x1, double x2) {
-		return new RightUpLinearShapeFuzzySet(name, axisName, x1, x2);
+	public static IFuzzySet createRightUpLinearShapeFuzzySet(String name, String paramName, double x1, double x2) {
+		return new RightUpLinearShapeFuzzySet(name, paramName, x1, x2);
+	}
+	
+	public static IFuzzySet createTrapezoidalShapeFuzzySet(String name, String paramName, double x1, double x2, double x3, double x4) {
+		return new TrapezoidalShapeFuzzySet(name, paramName, x1, x2, x3, x4);
 	}
 
+	public static IFuzzySet createSingletonShapeFuzzySet(String name, String paramName, double x){
+		return new SingletonShapeFuzzySet(name, paramName, x);
+	}
+	
+	public static IFuzzySet createRectangularShapeFuzzySet(String name, String paramName, double x1, double x2){
+		return new RectangularShapeFuzzySet(name, paramName, x1, x2);
+	}
+	
 	/**
 	 * Create fuzzy set from sample points. For the number of sample points n, it costs O(n^3).
 	 * 

@@ -36,7 +36,7 @@ public class AirConditioner {
 
 	// Fuzzy sets for output
 	private static IFuzzySet strong = FuzzySetFactory.createRightUpLinearShapeFuzzySet("strong", "volume", 6.0, 10.0);
-	private static IFuzzySet middle = FuzzySetFactory.createTriangleShapeFuzzySet("middle", "volume", 3.0, 5.0, 7.0);
+	private static IFuzzySet middle = FuzzySetFactory.createTriangularShapeFuzzySet("middle", "volume", 3.0, 5.0, 7.0);
 	private static IFuzzySet week = FuzzySetFactory.createLeftUpLinearShapeFuzzySet("week", "volume", 0.0, 4.0);
 
 	private static IKnowledgeBase kb = new KnowledgeBase(domain, hot, cool, dry, wet, strong, middle, week);
