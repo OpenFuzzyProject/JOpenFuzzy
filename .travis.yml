@@ -8,4 +8,5 @@ script:
   - mkdir lib
   - cp junit-4.12.jar lib/junit-4.12.jar
   - cp hamcrest-core-1.3.jar lib/hamcrest-core-1.3.jar
+  - ls lib
   - ant test
