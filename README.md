@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/OpenFuzzyProject/JOpenFuzzy.svg?branch=master)](https://travis-ci.org/OpenFuzzyProject/JOpenFuzzy)
+
 # JOpenFuzzy
 JOpenFuzzy is java frameworks for development of fuzzy inference systems.
 JOpenFuzzy is under development and is beta version.
