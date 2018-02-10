@@ -4,8 +4,9 @@ jdk:
 script:
   - ant all
   - wget https://github.com/junit-team/junit4/releases/download/r4.12/junit-4.12.jar
-  - wget https://github.com/mplacona/java-junit-template-project/blob/master/lib/hamcrest-core-1.3.jar
+  - wget https://github.com/mplacona/java-junit-template-project/raw/master/lib/hamcrest-core-1.3.jar
   - mkdir lib
   - cp junit-4.12.jar lib/junit-4.12.jar
   - cp hamcrest-core-1.3.jar lib/hamcrest-core-1.3.jar
+  - ls lib
   - ant test
