@@ -4,4 +4,3 @@ jdk:
   - openjdk8
 script:
   - ant all
-  
