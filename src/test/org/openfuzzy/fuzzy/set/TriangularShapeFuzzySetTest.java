@@ -1,4 +1,4 @@
-package org.openfuzzy.fuzzy.set.test;
+package org.openfuzzy.fuzzy.set;
 
 import static org.junit.Assert.*;
 
