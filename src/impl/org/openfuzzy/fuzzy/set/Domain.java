@@ -28,7 +28,7 @@ public class Domain implements IDomain {
 
 	@Override
 	public boolean contains(Map<String, Double> point) {
-		return getParameters().stream().map(param -> param.contains(point.get(param.getName()))).filter(b -> !b)
+		return !getParameters().stream().map(param -> param.contains(point.get(param.getName()))).filter(b -> !b)
 				.findFirst().isPresent();
 	}
 
