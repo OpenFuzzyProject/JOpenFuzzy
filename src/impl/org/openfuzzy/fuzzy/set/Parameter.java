@@ -25,4 +25,9 @@ public class Parameter implements IParameter {
 		return min;
 	}
 
+	@Override
+	public boolean contains(double x) {
+		return min <= x && x <= max;
+	}
+
 }
