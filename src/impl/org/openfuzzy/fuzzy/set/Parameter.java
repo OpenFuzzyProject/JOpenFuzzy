@@ -6,6 +6,7 @@ public class Parameter implements IParameter {
 	private double min;
 	
 	public Parameter(String name, double min, double max) {
+		this.name = name;
 		this.min = min;
 		this.max = max;
 	}
