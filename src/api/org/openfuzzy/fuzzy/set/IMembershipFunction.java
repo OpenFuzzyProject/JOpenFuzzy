@@ -16,6 +16,7 @@ import org.openfuzzy.fuzzy.lang.FuzzyLogic;
  * @author Toru Ikeda
  *
  */
+@FunctionalInterface
 public interface IMembershipFunction {
 	/**
 	 * Returns membership value of the specified input

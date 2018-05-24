@@ -5,6 +5,7 @@ package org.openfuzzy.fuzzy.lang;
  * @author Toru Ikeda
  *
  */
+@FunctionalInterface
 public interface FuzzyBinaryOperation {
 	public FuzzyLogic eval(FuzzyLogic x, FuzzyLogic y);
 }

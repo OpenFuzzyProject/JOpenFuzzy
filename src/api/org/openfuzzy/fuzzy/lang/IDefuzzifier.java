@@ -8,6 +8,7 @@ import org.openfuzzy.fuzzy.set.IFuzzySet;
  * An Defuzzifier.
  * @author toru
  */
+@FunctionalInterface
 public interface IDefuzzifier {
 	/**
 	 * Defuzzy the specified fuzzy set.
