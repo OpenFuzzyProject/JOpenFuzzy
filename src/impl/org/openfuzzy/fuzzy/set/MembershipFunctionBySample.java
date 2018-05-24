@@ -34,7 +34,6 @@ class MembershipFunctionBySample implements IMembershipFunction {
 						x -> samplePoints.stream().filter(y -> x != y)
 								.sorted((a, b) -> Double.compare(euclideanDistance(x, a), euclideanDistance(x, b)))
 								.findFirst().get()));
-		System.out.println("minDistanceLinks = " + minDistanceLinks);
 
 		// Calculate neighbourhood threshold value epsilon_m
 		// that is the product of Km and the average of the distance of x and y that is
@@ -43,14 +42,12 @@ class MembershipFunctionBySample implements IMembershipFunction {
 		epsilon_m = minDistanceLinks.entrySet().parallelStream()
 				.map(link -> euclideanDistance(link.getKey(), link.getValue())).mapToDouble(Double::doubleValue)
 				.average().getAsDouble() * km;
-		System.out.println("epsilon_m = " + epsilon_m);
 
 		// Find the pair of x and y in sample points that the distance of is below
 		// epsilon_m.
 		// O(n^2)
 		links = samplePoints.parallelStream().collect(Collectors.toMap(x -> x, x -> samplePoints.stream()
 				.filter(y -> euclideanDistance(x, y) <= epsilon_m).collect(Collectors.toList())));
-		System.out.println("links = " + links);
 		
 		// Calculate neighbourhood threshold value epsilon_m
 		// that is the product of Kf and the average of the network distance of x and y
@@ -59,13 +56,11 @@ class MembershipFunctionBySample implements IMembershipFunction {
 		epsilon_f = minDistanceLinks.entrySet().parallelStream().filter(x -> links.get(x.getKey()).size() > 0)
 				.map(link -> euclideanDistance(link.getKey(), link.getValue())).mapToDouble(Double::doubleValue)
 				.average().getAsDouble() * kf;
-		System.out.println("epsilon_f = " + epsilon_f);
 
 		// For each point x in sample points,
 		// collect the points that the network distance of x and is below epsilon_f.
 		distanceBelowEpsilonFPoints = samplePoints.stream().collect(Collectors.toMap(x -> x, x -> samplePoints
 				.stream().filter(y -> networkDistance(x, y, links) <= epsilon_f).collect(Collectors.toList())));
-		System.out.println("distanceBelowEpsilonFPoints = " + distanceBelowEpsilonFPoints);
 
 		// Find the maximum in the numbers of collecting points of each x in sample
 		// points.
@@ -84,16 +79,34 @@ class MembershipFunctionBySample implements IMembershipFunction {
 			return FuzzyLogic.get(((double) distanceBelowEpsilonFPoints.get(same_p.get()).size() + 1) / nMax);
 		} else {
 			// collect K points from sample points. K is half the number of sample points.
-			List<double[]> nearPoints = samplePoints.stream()
-					.sorted((x, y) -> Double.compare(euclideanDistance(x, p), euclideanDistance(y, p)))
-					.collect(Collectors.toList()).subList(0, samplePoints.size() / 2);
-
-			double weightedMVSum = nearPoints.stream().mapToDouble(x -> (1.0 / euclideanDistance(x, p))
-					* (((double) distanceBelowEpsilonFPoints.get(x).size() + 1) / nMax)).sum();
-
-			double weighteSum = nearPoints.stream().mapToDouble(x -> (1.0 / euclideanDistance(x, p))).sum();
-
-			return FuzzyLogic.get(weightedMVSum / weighteSum);
+//			List<double[]> nearPoints = samplePoints.stream()
+//					.sorted((x, y) -> Double.compare(euclideanDistance(x, p), euclideanDistance(y, p)))
+//					.collect(Collectors.toList()).subList(0, samplePoints.size() / 2);
+//
+//			double weightedMVSum = nearPoints.stream().mapToDouble(x -> (1.0 / euclideanDistance(x, p))
+//					* (((double) distanceBelowEpsilonFPoints.get(x).size() + 1) / nMax)).sum();
+//
+//			double weighteSum = nearPoints.stream().mapToDouble(x -> (1.0 / euclideanDistance(x, p))).sum();
+//
+//			return FuzzyLogic.get(weightedMVSum / weighteSum);
+			
+			List<double[]> nearPoints = samplePoints
+					.stream().filter(x -> euclideanDistance(p, x) <= epsilon_m).collect(Collectors.toList());
+			
+			if(nearPoints.isEmpty())
+				return FuzzyLogic.FALSE;
+			
+			links.put(p, nearPoints);
+			
+			List<double[]> nearPointsByNet = samplePoints
+					.stream().filter(x -> networkDistance(p, x, links) <= epsilon_f).collect(Collectors.toList());
+			
+			links.remove(p);
+			
+			if(nearPointsByNet.size() > nMax)
+				return FuzzyLogic.TRUE;
+			return FuzzyLogic.get(((double) nearPointsByNet.size()) / nMax);
+//			return FuzzyLogic.get(nearPoints.stream().mapToDouble(x -> distanceBelowEpsilonFPoints.get(x).size()).average().getAsDouble() / nMax);
 		}
 	}
 	
