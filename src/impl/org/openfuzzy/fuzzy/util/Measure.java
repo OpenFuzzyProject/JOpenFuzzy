@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class Measure {
+final public class Measure {
 	// Singleton
 	private Measure() {}
 	
@@ -33,8 +33,12 @@ public class Measure {
 		}
 		return Math.pow(sum, 1 / p);
 	}
-
+	
 	public static double networkDistance(double[] s, double[] e, Map<double[], List<double[]>> links) {
+		return networkDistance(s, links).get(e);
+	}
+
+	public static Map<double[], Double> networkDistance(double[] s, Map<double[], List<double[]>> links) {
 		Set<double[]> vertexes = links.keySet();
 		Map<double[], Double> d = vertexes.stream().collect(Collectors.toMap(v -> v, v -> Double.MAX_VALUE));
 		d.put(s, 0.0);
@@ -53,6 +57,6 @@ public class Measure {
 				}
 			});
 		}
-		return d.get(e);
+		return d;
 	}
 }
