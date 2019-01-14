@@ -1,0 +1,14 @@
+# ant build
+/build/
+/doc/
+/jopenfuzzy-with-src.jar
+/jopenfuzzy.jar
+
+# eclipse
+/bin/
+/.classpath
+/.project
+/.settings
+
+# vscode
+/.vscode
