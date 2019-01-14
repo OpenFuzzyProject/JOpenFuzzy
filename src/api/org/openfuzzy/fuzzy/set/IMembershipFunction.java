@@ -8,9 +8,9 @@ import org.openfuzzy.fuzzy.lang.FuzzyLogic;
  * A membership function from double to FuzzyLogic values.
  * This is function interface. 
  * You can create the instance by lambda expression.
- * <pre>
- * input -> FuzzyLogic.get([expr]);
- * </pre>
+ * <pre>{@code 
+ * input -> FuzzyLogic.get([expr]); 
+ * }</pre>
  * 
  * @see FuzzyLogic
  * @author Toru Ikeda
